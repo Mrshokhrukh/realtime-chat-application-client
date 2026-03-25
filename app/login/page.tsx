@@ -26,7 +26,7 @@ const LoginPage = () => {
 
   return (
     <div
-      className='min-h-screen w-full flex flex-col items-center justify-center p-4 selection:bg-purple-500/30 font-sans relative overflow-hidden'
+      className='min-h-screen fixed top-0 left-0 w-full flex flex-col items-center justify-center p-4 selection:bg-purple-500/30 font-sans overflow-hidden'
       style={{
         background: `
           radial-gradient(circle at 15% 15%, rgba(68, 30, 120, 0.4) 0%, rgba(0,0,0,0) 40%),
