@@ -25,7 +25,7 @@ const ChatsPage = () => {
   }, [router])
 
   return (
-    <div>
+    <div className='bg-[#6E00FF]'>
       ChatsPage
     </div>
   )
