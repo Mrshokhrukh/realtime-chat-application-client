@@ -1,16 +1,9 @@
 'use client'
-
-import { Bell, BellDot, BellIcon, BellRing, Search } from 'lucide-react'
 import Link from 'next/link'
-import React, { Profiler } from 'react'
-import { AiFillProfile } from 'react-icons/ai'
-import { BiBell } from 'react-icons/bi'
 import { CgProfile } from 'react-icons/cg'
 import { FaBell } from 'react-icons/fa'
-import { ImProfile } from 'react-icons/im'
 import { MdRssFeed } from 'react-icons/md'
-import { PiPerson } from 'react-icons/pi'
-import { RiHotspotFill, RiHotspotLine, RiProfileFill, RiWirelessChargingFill } from 'react-icons/ri'
+
 
 const Header = () => {
   return (
