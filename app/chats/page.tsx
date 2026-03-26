@@ -155,7 +155,7 @@ export default function ChatsPage() {
         <div className='flex-1 overflow-y-auto p-3 space-y-0.5 custom-scrollbar'>
           {[
             { icon: User, label: 'My Profile' },
-            { icon: Users, label: 'New Group' , onclick: () => alert('hello group') },
+            { icon: Users, label: 'New Group' ,  },
             { icon: Megaphone, label: 'New Channel' },
             { icon: Bookmark, label: 'Saved Messages' },
             { icon: Settings, label: 'Settings' },
@@ -199,12 +199,7 @@ export default function ChatsPage() {
           </div>
           
         </div>
-        {showNewGroup && (
-      <div className=" w-100 h-100 border bg-blue-950 ml-120">
-        <h2>Yangi guruh yaratish</h2>
-        <button onClick={() => setShowNewGroup(false)}>Yopish</button>
-      </div>
-    )}
+        
 
         <button
           onClick={() => {
@@ -271,7 +266,7 @@ export default function ChatsPage() {
             )}
           </div>
         </div>
-
+           
         <div className='flex-1 overflow-y-auto px-2 space-y-0.5 custom-scrollbar'>
           {filteredChats.length > 0 ? (
             filteredChats.map((chat) => (
@@ -309,7 +304,12 @@ export default function ChatsPage() {
           )}
         </div>
       </section>
-
+           {showNewGroup && (
+      <div className={` absolute  z-[70]   w-100 h-120 mt-30 border rounded-4xl bg-black/60 ml-120 `} >
+        <h2>Yangi guruh yaratish</h2>
+        <button onClick={() => setShowNewGroup(false)}>Yopish</button>
+      </div>
+    )}
       {/* --- MAIN CHAT WINDOW --- */}
       <main className='flex-1 h-full flex flex-col bg-[#070709] overflow-hidden'>
         <header className='h-16 border-b border-white/5 flex items-center justify-between px-6 bg-[#0b0b0f]/50 backdrop-blur-xl flex-shrink-0'>
@@ -424,6 +424,7 @@ export default function ChatsPage() {
           display: none;
         }
       `}</style>
+      
     </div>
   )
 }
