@@ -80,6 +80,7 @@ export default function ChatsPage() {
   const [showInfo, setShowInfo] = useState(true)
   const [showMenu, setShowMenu] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [showNewGroup, setShowNewGroup] = useState(false)
 
   // User & Auth States
   const [loading, setLoading] = useState(true)
@@ -154,7 +155,7 @@ export default function ChatsPage() {
         <div className='flex-1 overflow-y-auto p-3 space-y-0.5 custom-scrollbar'>
           {[
             { icon: User, label: 'My Profile' },
-            { icon: Users, label: 'New Group' },
+            { icon: Users, label: 'New Group' , onclick: () => alert('hello group') },
             { icon: Megaphone, label: 'New Channel' },
             { icon: Bookmark, label: 'Saved Messages' },
             { icon: Settings, label: 'Settings' },
@@ -162,6 +163,25 @@ export default function ChatsPage() {
             <button
               key={idx}
               className='w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all text-slate-400 hover:text-white group'
+              onClick={()=>{
+                 if (item.label === 'New Group') {
+                  setShowNewGroup(true)
+
+    } else if (item.label === 'My Profile') {
+
+      alert("Profil sahifasi!");
+
+    } else if (item.label === 'Settings') {
+
+      alert("Sozlamalar ochildi!");
+
+    } else {
+
+     
+      console.log(`${item.label} bosildi!`);
+
+    }
+              }}
             >
               <item.icon size={19} strokeWidth={1.5} className='group-hover:text-[#ac7dfa]' />
               <span className='text-sm font-semibold'>{item.label}</span>
@@ -177,7 +197,14 @@ export default function ChatsPage() {
               <div className='absolute right-0.5 top-0.5 w-2.5 h-2.5 bg-[#ac7dfa] rounded-full' />
             </div>
           </div>
+          
         </div>
+        {showNewGroup && (
+      <div className=" w-100 h-100 border bg-blue-950 ml-120">
+        <h2>Yangi guruh yaratish</h2>
+        <button onClick={() => setShowNewGroup(false)}>Yopish</button>
+      </div>
+    )}
 
         <button
           onClick={() => {
