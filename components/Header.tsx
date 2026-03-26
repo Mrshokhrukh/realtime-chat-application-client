@@ -1,35 +1,49 @@
 'use client'
-import { Search, Wifi } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
 
+import React from 'react'
+import { Search, PanelRightClose, PanelRightOpen, MoreHorizontal } from 'lucide-react'
+import { Chat } from './ChatList'
 
-const Header = () => {
+interface HeaderProps {
+  selectedChat: Chat
+  showInfo: boolean
+  setShowInfo: (show: boolean) => void
+  getStatusDisplay: (chat: Chat) => { text: string; color: string }
+}
+
+const Header = ({
+  selectedChat,
+  showInfo,
+  setShowInfo,
+  getStatusDisplay,
+}: HeaderProps) => {
   return (
-    <div className='w-full px-10 py-2.25 h-18 bg-[#0f1421] border-b-2 border-b-white/10 flex justify-between items-center'>
-      <form className="w-full h-full max-w-180 flex items-center px-4 gap-4 border rounded-full border-white/10 bg-[#08080e]">
-        <Search className="text-white/70" />
-        <input type="text" placeholder="Search anyone" className="h-full text-[18px] w-full outline-none text-white/80" />
-      </form>
-
-      <div className="h-full py-1 flex gap-7 items-center">
-        <div className="flex bg-[#141219] h-full w-max px-5 gap-2.5 items-center rounded-full border border-white/5">
-          <div className="w-3 h-3 bg-[#00fcfe] rounded-full animate-pulse"></div>
-          <span className="uppercase font-medium text-[14px] text-[#00fcfe] pr-5 border-r-2 border-white/10 leading-5">Online</span>
-          <Wifi className="text-white/80 h-5 ml-1" />
-        </div>
-
-        <Link href="/profile" className="h-9.5 w-9.5 p-0.5 border border-[#00fcfe] rounded-full flex items-center">
-          <Image
-            src="https://www.tubefilter.com/wp-content/uploads/2023/10/i-show-speed.jpg"
-            alt="Profile"
-            width={120}
-            height={120}
-            className="w-full h-full rounded-full object-cover"
-          />
-        </Link>
+    <header className='h-16 border-b border-white/5 flex items-center justify-between px-6 bg-[#0b0b0f]/50 backdrop-blur-xl shrink-0'>
+      <div className='flex flex-col'>
+        <h3 className='font-bold text-white text-sm leading-tight'>
+          {selectedChat.name}
+        </h3>
+        <p
+          className={`text-[10px] font-bold uppercase tracking-[0.15em] ${
+            getStatusDisplay(selectedChat).color
+          }`}
+        >
+          {getStatusDisplay(selectedChat).text}
+        </p>
       </div>
-    </div>
+      <div className='flex items-center gap-6 text-slate-500'>
+        <Search size={18} className='cursor-pointer hover:text-white' />
+        <button
+          onClick={() => setShowInfo(!showInfo)}
+          className={`transition-colors ${
+            showInfo ? 'text-[#ac7dfa]' : 'hover:text-white'
+          }`}
+        >
+          {showInfo ? <PanelRightClose size={20} /> : <PanelRightOpen size={20} />}
+        </button>
+        <MoreHorizontal size={20} className='cursor-pointer hover:text-white' />
+      </div>
+    </header>
   )
 }
 
