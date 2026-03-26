@@ -1,9 +1,9 @@
 import React from 'react'
 
-const page = () => {
+const ChannelsPage = () => {
   return (
-    <div>page</div>
+    <div>ChannelsPage</div>
   )
 }
 
-export default page
+export default ChannelsPage
