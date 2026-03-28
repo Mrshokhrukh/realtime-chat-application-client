@@ -7,6 +7,8 @@ import Menu from '@/components/Menu'
 import ChatList, { Chat } from '@/components/ChatList'
 import ChatWindow from '@/components/ChatWindow'
 import InfoPanel from '@/components/InfoPanel'
+import { CameraIcon, Edit } from 'lucide-react';
+import Image from 'next/image';
 
 // --- MOCK DATA ---
 const MOCK_CHATS: Chat[] = [
@@ -61,6 +63,11 @@ export default function ChatsPage() {
   const [showMenu, setShowMenu] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [showNewGroup, setShowNewGroup] = useState(false)
+    const [isEditingImage, setIsEditingImage] = useState(false);
+    const [image, setImage] = useState<string>(
+        "https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA4L2pvYjEwMzQtZWxlbWVudC0wNi0zOTcucG5n.png",
+    );
+
 
   // User & Auth States
   const [loading, setLoading] = useState(true);
@@ -118,18 +125,70 @@ export default function ChatsPage() {
       />
 
       {showNewGroup && (
-        <div className="absolute inset-x-0 top-0 z-70 flex items-center justify-center h-full bg-black/50">
-           <div className="w-80 p-6 border bg-[#0b0b0f] border-white/10 rounded-2xl shadow-2xl">
-              <h2 className="text-white font-bold mb-4">Yangi guruh yaratish</h2>
-              <button 
+        <div className="absolute  inset-x-0 top-0 z-70 flex items-center justify-center h-full bg-black/50">
+           <div className="w-80 flex flex-col gap-5 p-6 border bg-[#0b0b0f] border-white/10 rounded-2xl shadow-2xl">
+              {/* <h2 className="text-white font-bold mb-4 text-center">Yangi guruh yaratish</h2> */}
+              <div className="flex flex-col items-center ">
+                <div className="relative">
+                    <div className='w-20 h-20'>
+                      <Image
+                src={image}
+                alt="Group image" 
+                width={100}
+                height={100}
+                className="rounded-full w-full h-20"
+                    />
+                    </div>
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        id="upload"
+                        className="hidden"
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                                const url = URL.createObjectURL(file);
+                                setImage(url);
+                                setIsEditingImage(false);
+                            }
+                        }}
+                    />
+                    {isEditingImage ? (
+                        <label
+                            htmlFor="upload"
+                            className="absolute bottom-0 right-0 bg-blue-500 p-1 rounded-full cursor-pointer"
+                        >
+                            <CameraIcon fontSize="small" />
+                        </label>
+                    ) : (
+                        <div
+                            onClick={() => setIsEditingImage(true)}
+                            className="absolute bottom-0 right-0  bg-purple-500 p-1 rounded-full cursor-pointer"
+                        >
+                            <Edit />
+                        </div>
+                    )}
+                </div>
+                </div>
+               <div>
+                 <label id='grname' className='text-[#ac7dfa]' >Group name</label>
+              <input type='text' name='grname' className='w-full h-8 rounded-sm bg-[#ac7dfa] border-none text-black  '/>
+               </div>
+              <div className='flex  gap-3'>
+                <button 
                 onClick={() => setShowNewGroup(false)}
-                className="w-full py-2 bg-[#ac7dfa] text-black rounded-xl font-bold hover:bg-[#ac7dfa]/90 transition-colors"
+                className=" flex-1 py-2 bg-[#ac7dfa] text-black rounded-xl font-bold hover:bg-[#ac7dfa]/90 transition-colors"
               >
-                Yopish
+                Cancel
               </button>
+              <button 
+              className=' flex-1 py-2 bg-[#ac7dfa] text-black rounded-xl font-bold hover:bg-[#ac7dfa]/90 transition-colors'
+              >Create</button>
+              </div>
             </div>
-        </div>
-      )}
+        </div>)}
+      
 
       {/* MINIMAL SIDEBAR */}
       <Sidebar

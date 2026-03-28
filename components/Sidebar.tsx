@@ -30,7 +30,7 @@ const Sidebar = ({ activeFolder, setActiveFolder, setShowMenu }: SidebarProps) =
           <button
             key={f.id}
             onClick={() => setActiveFolder(f.id)}
-            className={`relative flex flex-col items-center justify-center py-3 rounded-2xl transition-all ${
+            className={` relative flex flex-col items-center justify-center py-3 rounded-2xl transition-all ${
               activeFolder === f.id
                 ? 'bg-[#ac7dfa]/10 text-[#ac7dfa]'
                 : 'text-slate-600 hover:text-slate-400'
