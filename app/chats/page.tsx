@@ -7,11 +7,11 @@ import Menu from '@/components/Menu'
 import ChatList, { Chat } from '@/components/ChatList'
 import ChatWindow from '@/components/ChatWindow'
 import InfoPanel from '@/components/InfoPanel'
-import { CameraIcon, Edit } from 'lucide-react';
+import { CameraIcon } from 'lucide-react';
 import Image from 'next/image';
 
 // --- MOCK DATA ---
-const MOCK_CHATS: Chat[] = [
+const INITIAL_CHATS: Chat[] = [
   {
     id: 1,
     name: "Elena Thorne",
@@ -56,18 +56,19 @@ const MOCK_CHATS: Chat[] = [
 export default function ChatsPage() {
   const router = useRouter();
 
-  // UI States
-  const [selectedChat, setSelectedChat] = useState<Chat>(MOCK_CHATS[0])
+  
+  const [chats, setChats] = useState<Chat[]>(INITIAL_CHATS)
+  const [selectedChat, setSelectedChat] = useState<Chat>(INITIAL_CHATS[0])
   const [activeFolder, setActiveFolder] = useState('All')
   const [showInfo, setShowInfo] = useState(true)
   const [showMenu, setShowMenu] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [showNewGroup, setShowNewGroup] = useState(false)
-    const [isEditingImage, setIsEditingImage] = useState(false);
-    const [image, setImage] = useState<string>(
-        "https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA4L2pvYjEwMzQtZWxlbWVudC0wNi0zOTcucG5n.png",
-    );
-
+  
+  const [groupName, setGroupName] = useState("");
+  const [groupImage, setGroupImage] = useState<string>(
+    "https://images.rawpixel.com"
+  );
 
   // User & Auth States
   const [loading, setLoading] = useState(true);
@@ -92,7 +93,30 @@ export default function ChatsPage() {
     }
   }, [router]);
 
-  // Dynamic Status Helper
+  // Helper: Create Group
+  const handleCreateGroup = () => {
+    if (!groupName.trim()) return alert("Guruh nomini kiriting!");
+    
+    const newGroup: Chat = {
+      id: Date.now(),
+      name: groupName,
+      username: `@${groupName.toLowerCase().replace(/\s/g, '_')}`,
+      avatar: groupName.substring(0, 2).toUpperCase(),
+      isOnline: true,
+      isTyping: false,
+      lastSeen: null,
+      lastMsg: "Guruh yaratildi",
+      time: "Hozir",
+      bio: "Yangi guruh tavsifi",
+      folder: "Groups",
+    };
+
+    setChats([newGroup, ...chats]);
+    setShowNewGroup(false);
+    setGroupName("");
+  };
+
+  
   const getStatusDisplay = (chat: Chat) => {
     if (chat.isTyping) return { text: 'typing...', color: 'text-[#ac7dfa] animate-pulse' }
     if (chat.isOnline) return { text: 'online', color: 'text-cyan-500' }
@@ -100,22 +124,22 @@ export default function ChatsPage() {
     return { text: 'offline', color: 'text-slate-600' }
   }
 
-  // Search Logic
+
   const filteredChats = useMemo(() => {
-    return MOCK_CHATS.filter((chat) => {
-      const matchesFolder =
-        activeFolder === "All" || chat.folder === activeFolder;
+    return chats.filter((chat) => {
+      const matchesFolder = activeFolder === "All" || chat.folder === activeFolder;
       const matchesSearch =
         chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         chat.username.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesFolder && matchesSearch;
     });
-  }, [activeFolder, searchQuery]);
+  }, [activeFolder, searchQuery, chats]);
 
   if (loading) return <div className="h-screen bg-[#070709]" />;
 
   return (
     <div className='flex h-screen w-full bg-[#070709] text-slate-300 overflow-hidden relative font-sans select-none transition-all'>
+      
       {/* SIDE DRAWER (MENU) */}
       <Menu
         showMenu={showMenu}
@@ -124,71 +148,74 @@ export default function ChatsPage() {
         setShowNewGroup={setShowNewGroup}
       />
 
+      {/* NEW GROUP MODAL */}
       {showNewGroup && (
-        <div className="absolute  inset-x-0 top-0 z-70 flex items-center justify-center h-full bg-black/50">
-           <div className="w-80 flex flex-col gap-5 p-6 border bg-[#0b0b0f] border-white/10 rounded-2xl shadow-2xl">
-              {/* <h2 className="text-white font-bold mb-4 text-center">Yangi guruh yaratish</h2> */}
-              <div className="flex flex-col items-center ">
-                <div className="relative">
-                    <div className='w-20 h-20'>
-                      <Image
-                src={image}
-                alt="Group image" 
-                width={100}
-                height={100}
-                className="rounded-full w-full h-20"
-                    />
-                    </div>
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md">
+          <div className="w-80 flex flex-col gap-6 p-6 border bg-[#0b0b0f] border-white/10 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
+            <h2 className="text-white font-bold text-center text-xl">New Group</h2>
+            
+            <div className="flex flex-col items-center">
+              <div className="relative">
+                <div className='w-24 h-24 relative rounded-full overflow-hidden border-2 border-[#ac7dfa]/20'>
+                  <Image
+                    src={groupImage}
+                    alt="Group Image"
+                    fill
+                    className="text-center pt-5 object-cover"
+                    unoptimized
+                  />
+                </div>
 
-                    <input
-                        type="file"
-                        accept="image/*"
-                        id="upload"
-                        className="hidden"
-                        onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                                const url = URL.createObjectURL(file);
-                                setImage(url);
-                                setIsEditingImage(false);
-                            }
-                        }}
-                    />
-                    {isEditingImage ? (
-                        <label
-                            htmlFor="upload"
-                            className="absolute bottom-0 right-0 bg-blue-500 p-1 rounded-full cursor-pointer"
-                        >
-                            <CameraIcon fontSize="small" />
-                        </label>
-                    ) : (
-                        <div
-                            onClick={() => setIsEditingImage(true)}
-                            className="absolute bottom-0 right-0  bg-purple-500 p-1 rounded-full cursor-pointer"
-                        >
-                            <Edit />
-                        </div>
-                    )}
-                </div>
-                </div>
-               <div>
-                 <label id='grname' className='text-[#ac7dfa]' >Group name</label>
-              <input type='text' name='grname' className='w-full h-8 rounded-sm bg-[#ac7dfa] border-none text-black  '/>
-               </div>
-              <div className='flex  gap-3'>
-                <button 
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="group-img-upload"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setGroupImage(URL.createObjectURL(file));
+                    }
+                  }}
+                />
+                
+                <label
+                  htmlFor="group-img-upload"
+                  className="absolute bottom-0 right-0 bg-[#ac7dfa] p-2 rounded-full cursor-pointer hover:scale-110 transition-transform shadow-lg shadow-black/50"
+                >
+                  <CameraIcon size={18} className="text-black" />
+                </label>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className='text-[#ac7dfa] text-xs font-semibold uppercase tracking-wider ml-1'>Group Name</label>
+              <input 
+                type='text' 
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+                placeholder="Name your group..."
+                className='w-full h-11 px-4 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-[#ac7dfa] transition-all'
+              />
+            </div>
+
+            <div className='flex gap-3'>
+              <button 
                 onClick={() => setShowNewGroup(false)}
-                className=" flex-1 py-2 bg-[#ac7dfa] text-black rounded-xl font-bold hover:bg-[#ac7dfa]/90 transition-colors"
+                className="flex-1 py-3 bg-white/5 text-white rounded-xl font-semibold hover:bg-white/10 transition-colors"
               >
                 Cancel
               </button>
               <button 
-              className=' flex-1 py-2 bg-[#ac7dfa] text-black rounded-xl font-bold hover:bg-[#ac7dfa]/90 transition-colors'
-              >Create</button>
-              </div>
+                onClick={handleCreateGroup}
+                className='flex-1 py-3 bg-[#ac7dfa] text-black rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all'
+              >
+                Create
+              </button>
             </div>
-        </div>)}
-      
+          </div>
+        </div>
+      )}
 
       {/* MINIMAL SIDEBAR */}
       <Sidebar
@@ -223,16 +250,9 @@ export default function ChatsPage() {
       )}
 
       <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 20px;
-        }
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.05); border-radius: 20px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
       `}</style>
     </div>
   );
