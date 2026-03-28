@@ -56,7 +56,7 @@ const INITIAL_CHATS: Chat[] = [
 export default function ChatsPage() {
   const router = useRouter();
 
-  
+  // UI States
   const [chats, setChats] = useState<Chat[]>(INITIAL_CHATS)
   const [selectedChat, setSelectedChat] = useState<Chat>(INITIAL_CHATS[0])
   const [activeFolder, setActiveFolder] = useState('All')
@@ -65,6 +65,7 @@ export default function ChatsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showNewGroup, setShowNewGroup] = useState(false)
   
+  // Group Create States
   const [groupName, setGroupName] = useState("");
   const [groupImage, setGroupImage] = useState<string>(
     "https://images.rawpixel.com"
@@ -106,7 +107,7 @@ export default function ChatsPage() {
       isTyping: false,
       lastSeen: null,
       lastMsg: "Guruh yaratildi",
-      time: "Hozir",
+      time: 'n',
       bio: "Yangi guruh tavsifi",
       folder: "Groups",
     };
@@ -116,7 +117,7 @@ export default function ChatsPage() {
     setGroupName("");
   };
 
-  
+  // Dynamic Status Helper
   const getStatusDisplay = (chat: Chat) => {
     if (chat.isTyping) return { text: 'typing...', color: 'text-[#ac7dfa] animate-pulse' }
     if (chat.isOnline) return { text: 'online', color: 'text-cyan-500' }
@@ -124,7 +125,7 @@ export default function ChatsPage() {
     return { text: 'offline', color: 'text-slate-600' }
   }
 
-
+  // Search Logic
   const filteredChats = useMemo(() => {
     return chats.filter((chat) => {
       const matchesFolder = activeFolder === "All" || chat.folder === activeFolder;
@@ -159,9 +160,9 @@ export default function ChatsPage() {
                 <div className='w-24 h-24 relative rounded-full overflow-hidden border-2 border-[#ac7dfa]/20'>
                   <Image
                     src={groupImage}
-                    alt="Group Image"
+                    alt="Group image"
                     fill
-                    className="text-center pt-5 object-cover"
+                    className="text-center object-cover"
                     unoptimized
                   />
                 </div>
