@@ -18,9 +18,10 @@ interface MenuProps {
   setShowMenu: (show: boolean) => void
   user: { fullName: string; username: string }
   setShowNewGroup: (show: boolean) => void
+  setShowNewChannel: (show: boolean) => void
 }
 
-const Menu = ({ showMenu, setShowMenu, user, setShowNewGroup }: MenuProps) => {
+const Menu = ({ showMenu, setShowMenu, user, setShowNewGroup , setShowNewChannel }: MenuProps) => {
   const router = useRouter()
 
   return (
@@ -68,8 +69,10 @@ const Menu = ({ showMenu, setShowMenu, user, setShowNewGroup }: MenuProps) => {
               onClick={() => {
                 if (item.label === 'New Group') {
                   setShowNewGroup(true)
-                } else if (item.label === 'My Profile') {
-                  alert('Profil sahifasi!')
+                  setShowMenu(false)
+                } else if (item.label === 'New Channel') {
+                  setShowNewChannel(true)
+                  setShowMenu(false)
                 } else if (item.label === 'Settings') {
                   alert('Sozlamalar ochildi!')
                 } else {

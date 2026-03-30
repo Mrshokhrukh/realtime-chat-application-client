@@ -4,3 +4,7 @@
 body {
   font-family: "Google Sans", sans-serif;
 }
+
+.group{
+    backdrop-filter: blur(1px); /* Orqa fonni xiralashtirish */
+}

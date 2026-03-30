@@ -71,6 +71,12 @@ export default function ChatsPage() {
     "https://images.rawpixel.com"
   );
 
+  const [showNewChannel , setShowNewChannel] = useState(false)
+  const [channelName , setChannelName ] = useState('')
+  const [ channelImage , setChannelImage] = useState<string>(
+    'https://images.rawpixel.com'
+  )
+
   // User & Auth States
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({ fullName: "", username: "" });
@@ -96,26 +102,61 @@ export default function ChatsPage() {
 
   // Helper: Create Group
   const handleCreateGroup = () => {
-    if (!groupName.trim()) return alert("Guruh nomini kiriting!");
+    if (!groupName.trim()) return alert('Enter the name of group')
+
+      const now = new Date()
+      const ok = now.toLocaleTimeString()
+      const newGroup: Chat = {
+        id: Date.now(),
+        name: groupName,
+        username: `@${groupName.toLowerCase().replace(/\s/g, '_')}`,
+        avatar: groupName.substring(0, 2).toUpperCase(),
+        isOnline: true,
+        isTyping: false,
+        lastSeen: null,
+        lastMsg: "Guruh yaratildi",
+        time: ok,
+        bio: "Yangi guruh tavsifi",
+        folder: "Groups",
+      };
+
+
+
+      setChats([newGroup, ...chats]);
+      setShowNewGroup(false);
+      setGroupName("");
+    }
+
     
-    const newGroup: Chat = {
+      const handleCreateChannel = () =>{
+
+    if (!channelName.trim()) return alert('Enter the name of channel')
+        const now = new Date()
+      const ok = now.toLocaleTimeString()
+      const newChannel: Chat = {
       id: Date.now(),
-      name: groupName,
-      username: `@${groupName.toLowerCase().replace(/\s/g, '_')}`,
-      avatar: groupName.substring(0, 2).toUpperCase(),
-      isOnline: true,
+      name: channelName,
+      username: `@${channelName.toLowerCase().replace(/\s/g, '_')}`,
+      avatar: channelName.substring(0, 2).toUpperCase(),
+      isOnline: false,
       isTyping: false,
       lastSeen: null,
-      lastMsg: "Guruh yaratildi",
-      time: 'n',
-      bio: "Yangi guruh tavsifi",
-      folder: "Groups",
+      lastMsg: "Channel Created",
+      time: ok,
+      bio: "New Channel bio",
+      folder: "Channels",
     };
 
-    setChats([newGroup, ...chats]);
-    setShowNewGroup(false);
-    setGroupName("");
-  };
+
+
+    setChats([newChannel , ...chats])
+    setShowNewChannel(false)
+    setChannelName('')
+      }
+
+
+
+
 
   // Dynamic Status Helper
   const getStatusDisplay = (chat: Chat) => {
@@ -147,11 +188,12 @@ export default function ChatsPage() {
         setShowMenu={setShowMenu}
         user={user}
         setShowNewGroup={setShowNewGroup}
+        setShowNewChannel = {setShowNewChannel}
       />
 
       {/* NEW GROUP MODAL */}
       {showNewGroup && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md">
+        <div className="group absolute inset-0 z-[70] flex items-center justify-center bg-black/60">
           <div className="w-80 flex flex-col gap-6 p-6 border bg-[#0b0b0f] border-white/10 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
             <h2 className="text-white font-bold text-center text-xl">New Group</h2>
             
@@ -195,7 +237,7 @@ export default function ChatsPage() {
                 type='text' 
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
-                placeholder="Name your group..."
+                placeholder="Name of group..."
                 className='w-full h-11 px-4 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-[#ac7dfa] transition-all'
               />
             </div>
@@ -217,6 +259,76 @@ export default function ChatsPage() {
           </div>
         </div>
       )}
+      {/* {'Channel Modal'} */}
+      {showNewChannel && (
+        <div className="group absolute inset-0 z-[70] flex items-center justify-center bg-black/60 ">
+          <div className="w-80 flex flex-col gap-6 p-6 border bg-[#0b0b0f] border-white/10 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
+            <h2 className="text-white font-bold text-center text-xl">New Channel</h2>
+            
+            <div className="flex flex-col items-center">
+              <div className="relative">
+                <div className='w-24 h-24 relative rounded-full overflow-hidden border-2 border-[#ac7dfa]/20'>
+                  <Image
+                    src={channelImage}
+                    alt="Channel image"
+                    fill
+                    className="text-center object-cover"
+                    unoptimized
+                  />
+                </div>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="channel-img-upload"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setChannelImage(URL.createObjectURL(file));
+                    }
+                  }}
+                />
+                
+                <label
+                  htmlFor="channel-img-upload"
+                  className="absolute bottom-0 right-0 bg-[#ac7dfa] p-2 rounded-full cursor-pointer hover:scale-110 transition-transform shadow-lg shadow-black/50"
+                >
+                  <CameraIcon size={18} className="text-black" />
+                </label>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className='text-[#ac7dfa] text-xs font-semibold uppercase tracking-wider ml-1'>Channel Name</label>
+              <input 
+                type='text' 
+                value={channelName}
+                onChange={(e) => setChannelName(e.target.value)}
+                placeholder="Name of channel..."
+                className='w-full h-11 px-4 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-[#ac7dfa] transition-all'
+              />
+            </div>
+
+            <div className='flex gap-3'>
+              <button 
+                onClick={() => setShowNewChannel(false)}
+                className="flex-1 py-3 bg-white/5 text-white rounded-xl font-semibold hover:bg-white/10 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleCreateChannel}
+                className='flex-1 py-3 bg-[#ac7dfa] text-black rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all'
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
       {/* MINIMAL SIDEBAR */}
       <Sidebar
