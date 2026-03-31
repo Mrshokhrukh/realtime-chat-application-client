@@ -33,26 +33,26 @@ const ChatList = ({
   setSearchQuery,
 }: ChatListProps) => {
   return (
-    <section className='w-[350px] h-full border-r border-white/5 flex flex-col bg-[#0b0b0f] shrink-0'>
+    <section className='w-[350px] h-full border-r border-[var(--border)] flex flex-col bg-[var(--surface-bg)] dark:bg-[var(--surface-bg)] shrink-0'>
       <div className='p-6 shrink-0'>
-        <h2 className='text-xl font-black text-white mb-4 tracking-tight'>Messages</h2>
+        <h2 className='text-xl font-black text-[var(--text-main)] mb-4 tracking-tight'>Messages</h2>
         <div className='relative group'>
           <Search
             className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${
-              searchQuery ? 'text-[#ac7dfa]' : 'text-slate-700'
+              searchQuery ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'
             }`}
             size={16}
           />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className='w-full bg-black/40 border border-white/5 rounded-xl py-2.5 pl-11 pr-10 text-sm outline-none focus:border-[#ac7dfa]/40 transition-all placeholder:text-slate-800 text-white'
+            className='w-full bg-[var(--surface-muted)] border border-[var(--border)] rounded-xl py-2.5 pl-11 pr-10 text-sm outline-none focus:border-[var(--accent)]/40 transition-all placeholder:text-[var(--text-muted)] text-[var(--text-main)]'
             placeholder='Search...'
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white'
+              className='absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-main)]'
             >
               <X size={14} />
             </button>
@@ -68,12 +68,12 @@ const ChatList = ({
               onClick={() => setSelectedChat(chat)}
               className={`p-4 rounded-2xl cursor-pointer transition-all flex gap-4 items-center ${
                 selectedChat.id === chat.id
-                  ? 'bg-[#16161c] border border-white/5'
-                  : 'hover:bg-white/5 border border-transparent'
+                  ? 'bg-[var(--card-bg)] :bg-[#16161c] border border-[var(--border)]'
+              : 'hover:bg-[var(--surface-muted)] border border-transparent'
               }`}
             >
               <div className='relative shrink-0'>
-                <div className='w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center font-bold text-slate-200 text-sm'>
+                <div className='w-12 h-12 rounded-xl bg-[var(--surface-muted)] border border-[var(--border)] flex items-center justify-center font-bold text-[var(--text-main)] text-sm'>
                   {chat.avatar}
                 </div>
                 {chat.isOnline && (
@@ -82,14 +82,14 @@ const ChatList = ({
               </div>
               <div className='flex-1 min-w-0'>
                 <div className='flex justify-between items-center mb-0.5'>
-                  <h4 className='font-bold text-slate-200 truncate text-sm'>
+                  <h4 className='font-bold text-slate-500 truncate text-sm'>
                     {chat.name}
                   </h4>
-                  <span className='text-[10px] text-slate-600'>{chat.time}</span>
+                  <span className='text-[10px] text-[var(--text-muted)]'>{chat.time}</span>
                 </div>
                 <p
                   className={`text-xs truncate leading-none ${
-                    chat.isTyping ? 'text-[#ac7dfa] font-medium' : 'text-slate-500'
+                    chat.isTyping ? 'text-[var(--accent)] font-medium' : 'text-[var(--text-muted)]'
                   }`}
                 >
                   {chat.isTyping ? 'typing...' : chat.lastMsg}

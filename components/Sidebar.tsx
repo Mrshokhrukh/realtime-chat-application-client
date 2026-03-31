@@ -18,10 +18,10 @@ const Sidebar = ({ activeFolder, setActiveFolder, setShowMenu }: SidebarProps) =
   ]
 
   return (
-    <aside className='w-[76px] h-full border-r border-white/5 flex flex-col items-center py-5 bg-[#08080a] shrink-0 z-40'>
+    <aside className='w-[76px] h-full border-r border-[var(--border)] flex flex-col items-center py-5 bg-[var(--surface-bg)] dark:bg-[var(--surface-bg)] shrink-0 z-40'>
       <button
         onClick={() => setShowMenu(true)}
-        className='w-12 h-12 flex items-center justify-center text-slate-500 hover:text-[#ac7dfa] transition-all bg-white/5 rounded-2xl mb-8 border border-white/5'
+        className='w-12 h-12 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--accent)] transition-all bg-[var(--surface-muted)] rounded-2xl mb-8 border border-[var(--border)]'
       >
         <MenuIcon size={22} />
       </button>
@@ -32,8 +32,8 @@ const Sidebar = ({ activeFolder, setActiveFolder, setShowMenu }: SidebarProps) =
             onClick={() => setActiveFolder(f.id)}
             className={` relative flex flex-col items-center justify-center py-3 rounded-2xl transition-all ${
               activeFolder === f.id
-                ? 'bg-[#ac7dfa]/10 text-[#ac7dfa]'
-                : 'text-slate-600 hover:text-slate-400'
+                ? 'bg-[var(--accent)]/15 text-[var(--accent)]'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
             }`}
           >
             <f.icon size={22} strokeWidth={activeFolder === f.id ? 2.5 : 2} />

@@ -20,7 +20,7 @@ const ChatWindow = ({
   getStatusDisplay,
 }: ChatWindowProps) => {
   return (
-    <main className='flex-1 h-full flex flex-col bg-[#070709] overflow-hidden'>
+    <main className='flex-1 h-full flex flex-col bg-[var(--app-bg)] dark:bg-[var(--app-bg)] overflow-hidden'>
       <Header
         selectedChat={selectedChat}
         showInfo={showInfo}
@@ -31,18 +31,18 @@ const ChatWindow = ({
       <Messages selectedChat={selectedChat} />
 
       <div className='p-6 shrink-0'>
-        <div className='max-w-4xl mx-auto flex items-center bg-[#111116] border border-white/5 rounded-2xl p-2 shadow-2xl focus-within:border-[#ac7dfa]/30 transition-all'>
-          <button className='p-2 text-slate-600 hover:text-white'>
+        <div className='max-w-4xl mx-auto flex items-center bg-[var(--card-bg)] border border-[var(--border)] rounded-2xl p-2 shadow-2xl focus-within:border-[var(--accent)]/30 transition-all'>
+          <button className='p-2 text-[var(--text-muted)] hover:text-[var(--text-main)]'>
             <Paperclip size={20} />
           </button>
           <input
-            className='flex-1 bg-transparent border-none outline-none text-sm px-3 text-white placeholder:text-slate-800'
+            className='flex-1 bg-transparent border-none outline-none text-sm px-3 text-[var(--text-main)] placeholder:text-[var(--text-muted)]'
             placeholder='Type your message...'
           />
-          <button className='p-2 text-slate-600 hover:text-white'>
+          <button className='p-2 text-[var(--text-muted)] hover:text-[var(--text-main)]'>
             <Smile size={20} />
           </button>
-          <button className='bg-[#ac7dfa] p-2.5 rounded-xl text-black hover:shadow-[0_0_15px_rgba(172,125,250,0.4)] transition-all ml-1'>
+          <button className='bg-[var(--accent)] p-2.5 rounded-xl text-[var(--button-text)] hover:shadow-[0_0_15px_rgba(172,125,250,0.4)] transition-all ml-1'>
             <Send size={18} fill='currentColor' />
           </button>
         </div>

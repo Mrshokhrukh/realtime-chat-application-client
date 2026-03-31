@@ -1,10 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
 @import "tailwindcss";
 
-body {
+html {
   font-family: "Google Sans", sans-serif;
 }
 
-.group{
-    backdrop-filter: blur(1px); /* Orqa fonni xiralashtirish */
+:root {
+  --app-bg: #f8fafc;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --button-text: #ffffff;
+  --surface-bg: #ffffff;
+  --surface-muted: rgba(15, 23, 42, 0.04);
+  --card-bg: #f1f5f9;
+  --border: rgba(15, 23, 42, 0.12);
+  --accent: #ac7dfa;
+  --overlay: rgba(0, 0, 0, 0.6);
+
+}
+
+html.dark {
+  --app-bg: #070709;
+  --text-main: #e2e8f0;
+  --text-muted: #a0aec0;
+  --button-text: #0f172a;
+  --surface-bg: #0b0b0f;
+  --surface-muted: rgba(255, 255, 255, 0.08);
+  --card-bg: #111116;
+  --border: rgba(255, 255, 255, 0.12);
+  --accent: #ac7dfa;
+  --overlay: rgba(0, 0, 0, 0.7);
+  --login-bg: radial-gradient(circle at 15% 15%, rgba(68, 30, 120, 0.4) 0%, rgba(0, 0, 0, 0) 40%, #070709 100%);
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background-color: var(--app-bg);
+  color: var(--text-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.group {
+  backdrop-filter: blur(1px); /* Orqa fonni xiralashtirish */
 }

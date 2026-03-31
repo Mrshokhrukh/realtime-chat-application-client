@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import Menu from '@/components/Menu'
@@ -78,27 +78,40 @@ export default function ChatsPage() {
   )
 
   // User & Auth States
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState({ fullName: "", username: "" });
+  const [user, setUser] = useState({ fullName: "", username: "" })
+  const [loading, setLoading] = useState(true)
 
   // Session Storage Logic
   useEffect(() => {
-    const storedUser = sessionStorage.getItem("aether_user");
+    if (typeof window === 'undefined') return
+
+    const storedUser = sessionStorage.getItem("aether_user")
     if (!storedUser) {
-      router.replace("/");
-    } else {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser({
-          fullName: parsedUser.fullName || "User Name",
-          username: parsedUser.username || "@username",
-        });
-      } catch (e) {
-        console.error("Session parse error", e);
-      }
-      setLoading(false);
+      router.replace("/")
+      return
     }
-  }, [router]);
+
+    try {
+      const parsedUser = JSON.parse(storedUser)
+      const loadedUser = {
+        fullName: parsedUser.fullName || "User Name",
+        username: parsedUser.username || "@username",
+      }
+      setUser(loadedUser)
+      setLoading(false)
+    } catch (err) {
+      console.error("Session parse error", err)
+      router.replace("/")
+    }
+  }, [router])
+
+  if (loading) {
+    return (
+      <div className='h-screen w-full flex items-center justify-center bg-[var(--app-bg)] text-[var(--text-main)]'>
+        Loading...
+      </div>
+    )
+  }
 
   // Helper: Create Group
   const handleCreateGroup = () => {
@@ -160,27 +173,24 @@ export default function ChatsPage() {
 
   // Dynamic Status Helper
   const getStatusDisplay = (chat: Chat) => {
-    if (chat.isTyping) return { text: 'typing...', color: 'text-[#ac7dfa] animate-pulse' }
-    if (chat.isOnline) return { text: 'online', color: 'text-cyan-500' }
-    if (chat.lastSeen) return { text: `last seen ${chat.lastSeen}`, color: 'text-slate-500' }
-    return { text: 'offline', color: 'text-slate-600' }
+    if (chat.isTyping) return { text: 'typing...', color: 'text-[var(--accent)] animate-pulse' }
+    if (chat.isOnline) return { text: 'online', color: 'text-emerald-500' }
+    if (chat.lastSeen) return { text: `last seen ${chat.lastSeen}`, color: 'text-[var(--text-muted)]' }
+    return { text: 'offline', color: 'text-[var(--text-muted)]' }
   }
 
   // Search Logic
-  const filteredChats = useMemo(() => {
-    return chats.filter((chat) => {
-      const matchesFolder = activeFolder === "All" || chat.folder === activeFolder;
-      const matchesSearch =
-        chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        chat.username.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesFolder && matchesSearch;
-    });
-  }, [activeFolder, searchQuery, chats]);
+  const filteredChats = chats.filter((chat) => {
+    const matchesFolder = activeFolder === "All" || chat.folder === activeFolder;
+    const matchesSearch =
+      chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      chat.username.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesFolder && matchesSearch;
+  });
 
-  if (loading) return <div className="h-screen bg-[#070709]" />;
 
   return (
-    <div className='flex h-screen w-full bg-[#070709] text-slate-300 overflow-hidden relative font-sans select-none transition-all'>
+    <div className='flex h-screen w-full text-[var(--text-main)] dark:text-[var(--text-main)] overflow-hidden relative font-sans select-none transition-all'>
       
       {/* SIDE DRAWER (MENU) */}
       <Menu
@@ -193,9 +203,9 @@ export default function ChatsPage() {
 
       {/* NEW GROUP MODAL */}
       {showNewGroup && (
-        <div className="group absolute inset-0 z-[70] flex items-center justify-center bg-black/60">
-          <div className="w-80 flex flex-col gap-6 p-6 border bg-[#0b0b0f] border-white/10 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
-            <h2 className="text-white font-bold text-center text-xl">New Group</h2>
+        <div className="group absolute inset-0 z-[70] flex items-center justify-center bg-[var(--overlay)]">
+          <div className="w-80 flex flex-col gap-6 p-6 border bg-[var(--surface-bg)] dark:bg-[var(--surface-bg)] border-[var(--border)] rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
+            <h2 className="text-[var(--text-main)] font-bold text-center text-xl">New Group</h2>
             
             <div className="flex flex-col items-center">
               <div className="relative">
@@ -238,20 +248,20 @@ export default function ChatsPage() {
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
                 placeholder="Name of group..."
-                className='w-full h-11 px-4 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-[#ac7dfa] transition-all'
+                className='w-full h-11 px-4 rounded-xl bg-[var(--surface-muted)] border border-[var(--border)] text-[var(--text-main)] outline-none focus:border-[var(--accent)] transition-all'
               />
             </div>
 
             <div className='flex gap-3'>
               <button 
                 onClick={() => setShowNewGroup(false)}
-                className="flex-1 py-3 bg-white/5 text-white rounded-xl font-semibold hover:bg-white/10 transition-colors"
+                className="flex-1 py-3 bg-[var(--surface-muted)] text-[var(--text-main)] rounded-xl font-semibold hover:bg-[var(--surface-muted)]/80 transition-colors"
               >
                 Cancel
               </button>
               <button 
                 onClick={handleCreateGroup}
-                className='flex-1 py-3 bg-[#ac7dfa] text-black rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all'
+                className='flex-1 py-3 bg-[var(--accent)] text-[var(--button-text)] rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all'
               >
                 Create
               </button>
@@ -261,9 +271,9 @@ export default function ChatsPage() {
       )}
       {/* {'Channel Modal'} */}
       {showNewChannel && (
-        <div className="group absolute inset-0 z-[70] flex items-center justify-center bg-black/60 ">
-          <div className="w-80 flex flex-col gap-6 p-6 border bg-[#0b0b0f] border-white/10 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
-            <h2 className="text-white font-bold text-center text-xl">New Channel</h2>
+        <div className="group absolute inset-0 z-[70] flex items-center justify-center bg-[var(--overlay)] ">
+          <div className="w-80 flex flex-col gap-6 p-6 border bg-[var(--surface-bg)] dark:bg-[var(--surface-bg)] border-[var(--border)] rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
+            <h2 className="text-[var(--text-main)] font-bold text-center text-xl">New Channel</h2>
             
             <div className="flex flex-col items-center">
               <div className="relative">
@@ -306,20 +316,20 @@ export default function ChatsPage() {
                 value={channelName}
                 onChange={(e) => setChannelName(e.target.value)}
                 placeholder="Name of channel..."
-                className='w-full h-11 px-4 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-[#ac7dfa] transition-all'
+                className='w-full h-11 px-4 rounded-xl bg-[var(--surface-muted)] border border-[var(--border)] text-[var(--text-main)] outline-none focus:border-[var(--accent)] transition-all'
               />
             </div>
 
             <div className='flex gap-3'>
               <button 
                 onClick={() => setShowNewChannel(false)}
-                className="flex-1 py-3 bg-white/5 text-white rounded-xl font-semibold hover:bg-white/10 transition-colors"
+                className="flex-1 py-3 bg-[var(--surface-muted)] text-[var(--text-main)] rounded-xl font-semibold hover:bg-[var(--surface-muted)]/80 transition-colors"
               >
                 Cancel
               </button>
               <button 
                 onClick={handleCreateChannel}
-                className='flex-1 py-3 bg-[#ac7dfa] text-black rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all'
+                className='flex-1 py-3 bg-[var(--accent)] text-[var(--button-text)] rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all'
               >
                 Create
               </button>
