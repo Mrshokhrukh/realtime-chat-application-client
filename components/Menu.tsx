@@ -23,15 +23,12 @@ interface MenuProps {
 
 const Menu = ({ showMenu, setShowMenu, user, setShowNewGroup , setShowNewChannel }: MenuProps) => {
   const router = useRouter()
-  const [nightMode, setNightMode] = useState(false)
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const saved = sessionStorage.getItem('nightMode')
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (saved !== null) setNightMode(saved === 'true')
-    }
-  }, [])
+  const [nightMode, setNightMode] = useState(() => {
+    if (typeof window === 'undefined') return false
+    const saved = sessionStorage.getItem('nightMode')
+    if (saved !== null) return saved === 'true'
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+  })
 
   useEffect(() => {
     if (typeof document !== 'undefined') {

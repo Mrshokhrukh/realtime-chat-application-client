@@ -82,7 +82,7 @@ const ChatList = ({
               </div>
               <div className='flex-1 min-w-0'>
                 <div className='flex justify-between items-center mb-0.5'>
-                  <h4 className='font-bold text-slate-500 truncate text-sm'>
+                  <h4 className='font-bold truncate text-sm'>
                     {chat.name}
                   </h4>
                   <span className='text-[10px] text-[var(--text-muted)]'>{chat.time}</span>
